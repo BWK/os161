@@ -1,0 +1,18 @@
+# bash files
+
+.bash_aliases
+.bash_history
+.bash_logout
+.bash_profile
+.bashrc
+
+# git config
+
+.gitconfig
+.profile
+
+# screen and vim
+
+.screenrc
+.viminfo
+.vimrc
