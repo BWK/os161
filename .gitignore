@@ -13,6 +13,8 @@
 
 # screen and vim
 
+.vim
 .screenrc
 .viminfo
 .vimrc
+
