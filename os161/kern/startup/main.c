@@ -50,6 +50,8 @@
 #include <test.h>
 #include <version.h>
 #include "autoconf.h"  // for pseudoconfig
+#include "opt-A0.h"
+#include "hello.c"
 
 
 /*
@@ -101,9 +103,14 @@ boot(void)
 	kprintf("%s", harvard_copyright);
 	kprintf("\n");
 
-	kprintf("Put-your-group-name-here's system version %s (%s #%d)\n", 
+	kprintf("Rebar Niemi's system version %s (%s #%d)\n", 
 		GROUP_VERSION, buildconfig, buildversion);
 	kprintf("\n");
+	kprintf("Lucky Cat v1.0\n");
+
+#if OPT_A0
+	hello();
+#endif /* OPT_A0 */
 
 	/* Early initialization. */
 	ram_bootstrap();

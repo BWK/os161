@@ -154,6 +154,10 @@ int dup2(int filehandle, int newhandle);
 int pipe(int filehandles[2]);
 time_t __time(time_t *seconds, unsigned long *nanoseconds);
 int __getcwd(char *buf, size_t buflen);
+
+//modifications
+int sys_hello(void);
+
 /* stat - see sys/stat.h */
 /* lstat - see sys/stat.h */
 
