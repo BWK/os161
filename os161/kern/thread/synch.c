@@ -162,8 +162,21 @@ lock_create(const char *name)
                 kfree(lock);
                 return NULL;
         }
+		  //first try on lock
+
+		  lock -> lk_wchan = wchan_create(lock->lk_name);
+
+		  if (lock->lk_wchan == NULL) {
+			  kfree(lock->lk_name);
+			  kfree(lock->lk_wchan);
+			  kfree(lock);
+			  return NULL;
+		  }
+
+		  spinlock_init(&lock->lk_spinlock);
+
+		  lock->lk_is_locked = 0;
         
-        // add stuff here as needed
         
         return lock;
 }
@@ -176,15 +189,41 @@ lock_destroy(struct lock *lock)
         // add stuff here as needed
         
         kfree(lock->lk_name);
+		  kfree(lock->lk_wchan);
+		  spinlock_cleanup(&lock->lk_spinlock);
         kfree(lock);
 }
 
 void
 lock_acquire(struct lock *lock)
 {
-        // Write this
+	//assert lock isn't null
+	KASSERT(lock!=NULL);
 
-        (void)lock;  // suppress warning until code gets written
+	//check if lock is being acquired by the same thread
+	if (lock->lk_threat==curthread && curthread!=NULL) {
+		kprintf("Lock acquired by same thread twicE: %s!\n", curthread->t_name);
+	}
+
+	//check if thread is in interrupted state
+	KASSERT(curthread->t_in_interrupt == false);
+
+	spinlock_acquire(lock->lk_spinlock);
+	
+	while(lock->lk_is_locked) {
+
+		wchan_lock(lock->lk_wchan);
+		spinlock_release(&lock->lk_spinlock);
+		wchan_sleep(lock->lk_wchan);
+
+		spinlock_acquire(lock->lk_spinlock);
+	}
+	//check if locked
+	KASSERT(!lk_is_locked);
+	lock->lk_is_locked = 1;
+	lock->lk_thread = curthread;
+	spinlock_release(lock->lk_spinlock);
+
 }
 
 void

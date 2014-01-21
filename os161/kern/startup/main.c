@@ -109,7 +109,7 @@ boot(void)
 	kprintf("Lucky Cat v1.0\n");
 
 #if OPT_A0
-	hello();
+	//hello();
 #endif /* OPT_A0 */
 
 	/* Early initialization. */
